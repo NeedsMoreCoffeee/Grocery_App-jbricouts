@@ -59,10 +59,13 @@ extension BagViewCollectionViewCell: UITableViewDelegate, UITableViewDataSource{
         return 4
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let cellType = bagSections[indexPath.section]
-        if cellType == .total { return 200 }
+        if cellType == .total { return 150 }
         return 80
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -182,6 +185,13 @@ extension BagViewCollectionViewCell{
 
         ])
         
+        let continueButtonLabel = UILabel()
+        continueButtonLabel.text = "Continue"
+        continueButtonLabel.textColor = .white
+        continueButtonLabel.textAlignment = .center
+        continueButtonLabel.font = UIFont(name: ProjectThemes.boldDMSans, size: 14)
+        continueButton.addFullView(continueButtonLabel, parent: continueButton)
+        
         bagTableView = UITableView(frame: .zero, style: .grouped)
         bagTableView.separatorColor = .clear
         bagTableView.backgroundColor = .clear
@@ -214,7 +224,8 @@ extension BagViewCollectionViewCell{
         titleLabel.sizeToFit()
         headerView.addsView(titleLabel)
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 32)
+            titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 32),
+            titleLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -5)
         ])
         
         
