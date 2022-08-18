@@ -62,9 +62,10 @@ extension HomeViewController:  UICollectionViewDelegate, UICollectionViewDataSou
         case .store:
              cell = collectionView.dequeueReusableCell(withReuseIdentifier: StoreViewBaseCell.reuseIdentifier, for: indexPath) as! StoreViewBaseCell
         case .bag:
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: BlankCollectionViewCell.reuseIdentifier, for: indexPath) as! BlankCollectionViewCell
-            let cellRef = cell as! BlankCollectionViewCell
-            cellRef.setText(string: cellType.rawValue)
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: BagViewCollectionViewCell.reuseIdentifier, for: indexPath) as! BagViewCollectionViewCell
+           // let cellRef = cell as! BagViewCollectionViewCell
+
+
         case .requests:
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: BlankCollectionViewCell.reuseIdentifier, for: indexPath) as! BlankCollectionViewCell
             let cellRef = cell as! BlankCollectionViewCell
@@ -122,6 +123,8 @@ extension HomeViewController{
             homeNavigationCollectionView.bottomAnchor.constraint(equalTo: homeNavigationTabBar.topAnchor)
         ])
         homeNavigationCollectionView.register(StoreViewBaseCell.self, forCellWithReuseIdentifier: StoreViewBaseCell.reuseIdentifier)
+        homeNavigationCollectionView.register(BagViewCollectionViewCell.self, forCellWithReuseIdentifier: BagViewCollectionViewCell.reuseIdentifier)
+
         homeNavigationCollectionView.register(BlankCollectionViewCell.self, forCellWithReuseIdentifier: BlankCollectionViewCell.reuseIdentifier)
 
     }
