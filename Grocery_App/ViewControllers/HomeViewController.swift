@@ -31,7 +31,7 @@ class HomeViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        //scrollToSection(section: 2)
+        scrollToSection(section: 2)
     }
     
     private func scrollToSection(section: Int){

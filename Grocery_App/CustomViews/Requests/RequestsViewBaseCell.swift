@@ -7,14 +7,44 @@
 
 import UIKit
 
+enum DeliveryStatus: String, CaseIterable{
+    case pending = "pending"
+    case inTransit = "in transit"
+    case delivered = "delivered"
+    case cancelled = "cancelled"
+    
+    /// the icon associated with our enum
+    var color: (main: UIColor, background: UIColor) {
+        switch self {
+        case .pending:
+            return  (main: .systemRed, background: .systemRed.withAlphaComponent(0.12))
+        case .inTransit:
+            return  (main: .orange, background: .systemYellow.withAlphaComponent(0.12))
+        case .delivered:
+            return  (main: ProjectThemes.greenGradientDark, background: ProjectThemes.greenGradientDark.withAlphaComponent(0.12))
+        case .cancelled:
+            return  (main: .black, background: .black.withAlphaComponent(0.12))
+        }
+    }
+    
+}
+
 class RequestsViewBaseCell: UICollectionViewCell {
     static let reuseIdentifier = "requestsViewBaseCellID"
 
     
     private var collapsableTableView: UITableView!
     
-    let colors: [(color: String, colors: [UIColor])] = [("Blues" ,[.systemCyan, .systemBlue, .systemPurple]), ("Reds", [.systemRed, .systemPink]), ("Greens", [.systemGreen, .systemTeal, .systemMint])]
+    let colors: [(color: String, colors: [UIColor])] = [
+        ("Blues" ,[.systemCyan, .systemBlue, .systemPurple]),
+        ("Reds", [.systemRed, .systemPink]),
+        ("Greens", [.systemGreen, .systemTeal, .systemMint]),
+        ("Rainbow", [.red, .orange, .yellow]),
+        ("Random", [ .systemTeal, .systemMint]),
+        ("None", [])
+    ]
     
+    let status: [DeliveryStatus] = [.pending, .inTransit, .delivered, .delivered, .delivered, .cancelled]
     var hiddenSections = Set<Int>()
     
     
@@ -22,15 +52,16 @@ class RequestsViewBaseCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        hiddenSections.insert(0)
-        hiddenSections.insert(1)
-        hiddenSections.insert(2)
-
+        hideAll()
+        
         addTableView()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    
+    private func hideAll(){
+        for index in 0...colors.count{
+            hiddenSections.insert(index)
+        }
     }
     
     @objc private func headerTapped(sender:UIButton){
@@ -56,6 +87,11 @@ class RequestsViewBaseCell: UICollectionViewCell {
              self.collapsableTableView.deleteRows(at: indexPathsForSection(),
                                        with: .fade)
          }
+    }
+    
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
 }
@@ -85,8 +121,7 @@ extension RequestsViewBaseCell: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CollapsableTableViewCell.reuseIdentifier) as! CollapsableTableViewCell
-      
-       // cell.backgroundColor = colors[indexPath.section].colors[indexPath.row]
+        cell.setGuideColor(color: status[indexPath.section].color.main)
         return cell
     }
     
@@ -140,7 +175,8 @@ extension RequestsViewBaseCell{
         
         let headerView = UIButton()
         headerView.tag = section
-        
+        headerView.addTarget(self, action: #selector(headerTapped(sender:)), for: .touchDown)
+
         let customContentView = UIView()
         
         let productImageView = UIImageView()
@@ -162,9 +198,8 @@ extension RequestsViewBaseCell{
         ])
         
         let productContainer = UIView()
-        let imageColor = ProjectThemes.greenGradientLight
         
-        productContainer.backgroundColor = imageColor.withAlphaComponent(0.12)
+        productContainer.backgroundColor = status[section].color.background
         productContainer.layer.cornerRadius = 12
         customContentView.addsView(productContainer)
         NSLayoutConstraint.activate([
@@ -175,7 +210,7 @@ extension RequestsViewBaseCell{
         ])
 
         productImageView.image = UIImage(named: "box_icon")
-        productImageView.tintColor = ProjectThemes.greenGradientDark
+        productImageView.tintColor = status[section].color.main
         productContainer.addsView(productImageView)
         NSLayoutConstraint.activate([
             productImageView.leadingAnchor.constraint(equalTo: productContainer.leadingAnchor),
@@ -196,6 +231,18 @@ extension RequestsViewBaseCell{
 
         ])
 
+        let productAmountLabel = UILabel()
+        productAmountLabel.text = "· \(colors[section].colors.count) items"
+        productAmountLabel.textColor = .lightGray
+        productAmountLabel.font = UIFont(name: ProjectThemes.regularDMSans, size: 12)
+        productAmountLabel.sizeToFit()
+        customContentView.addsView(productAmountLabel)
+        NSLayoutConstraint.activate([
+            productAmountLabel.bottomAnchor.constraint(equalTo: productNameLabel.bottomAnchor),
+            productAmountLabel.leadingAnchor.constraint(equalTo: productNameLabel.trailingAnchor, constant: 3)
+
+        ])
+
         productCostLabel.text = "$198.09"
         productCostLabel.textColor = ProjectThemes.greenGradientDark
         productCostLabel.font = UIFont(name: ProjectThemes.boldDMSans, size: 13)
@@ -207,9 +254,25 @@ extension RequestsViewBaseCell{
 
         ])
 
-        headerView.addTarget(self, action: #selector(headerTapped(sender:)), for: .touchDown)
 
+        let statusView = UIView()
+        statusView.layer.cornerRadius = 8
+        statusView.backgroundColor = status[section].color.background
+        customContentView.addsView(statusView)
+        NSLayoutConstraint.activate([
+            statusView.centerYAnchor.constraint(equalTo: customContentView.centerYAnchor),
+            statusView.trailingAnchor.constraint(equalTo: customContentView.trailingAnchor, constant: -20),
+            statusView.heightAnchor.constraint(equalToConstant: 26),
+            statusView.widthAnchor.constraint(equalToConstant: 70)
+        ])
     
+        let statusLabel = UILabel()
+        statusLabel.text = status[section].rawValue
+        statusLabel.font = UIFont(name: ProjectThemes.mediumDMSans, size: 12)
+        statusLabel.textAlignment = .center
+        statusLabel.textColor =  status[section].color.main
+        statusView.addFullView(statusLabel, parent: statusView)
+        
         return headerView
         
     }
@@ -237,11 +300,17 @@ private class CollapsableTableViewCell: UITableViewCell{
 
     }
     
+    
+    
+    public func setGuideColor(color: UIColor){
+        guideBar.backgroundColor = color
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
+
     private func setUpView(){
         backgroundColor = .clear
         
