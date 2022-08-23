@@ -31,7 +31,7 @@ class HomeViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        scrollToSection(section: 2)
+        //scrollToSection(section: 3)
     }
     
     private func scrollToSection(section: Int){
@@ -74,9 +74,7 @@ extension HomeViewController:  UICollectionViewDelegate, UICollectionViewDataSou
         case .requests:
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: RequestsViewBaseCell.reuseIdentifier, for: indexPath) as! RequestsViewBaseCell
         case .menu:
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: BlankCollectionViewCell.reuseIdentifier, for: indexPath) as! BlankCollectionViewCell
-            let cellRef = cell as! BlankCollectionViewCell
-            cellRef.setText(string: cellType.rawValue)
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: MenuBaseCell.reuseIdentifier, for: indexPath) as! MenuBaseCell
    
         }
         
@@ -128,7 +126,7 @@ extension HomeViewController{
         homeNavigationCollectionView.register(StoreViewBaseCell.self, forCellWithReuseIdentifier: StoreViewBaseCell.reuseIdentifier)
         homeNavigationCollectionView.register(BagViewBaseCell.self, forCellWithReuseIdentifier: BagViewBaseCell.reuseIdentifier)
         homeNavigationCollectionView.register(RequestsViewBaseCell.self, forCellWithReuseIdentifier: RequestsViewBaseCell.reuseIdentifier)
-        homeNavigationCollectionView.register(BlankCollectionViewCell.self, forCellWithReuseIdentifier: BlankCollectionViewCell.reuseIdentifier)
+        homeNavigationCollectionView.register(MenuBaseCell.self, forCellWithReuseIdentifier: MenuBaseCell.reuseIdentifier)
 
     }
     
