@@ -13,7 +13,7 @@ private struct Item{
     var amoint: Int = 1
 }
 
-class BagViewCollectionViewCell: UICollectionViewCell {
+class BagViewBaseCell: UICollectionViewCell {
     
     
     enum BagSection: String, CaseIterable{
@@ -49,14 +49,14 @@ class BagViewCollectionViewCell: UICollectionViewCell {
 
 
 //MARK: Delegates
-extension BagViewCollectionViewCell: UITableViewDelegate, UITableViewDataSource{
+extension BagViewBaseCell: UITableViewDelegate, UITableViewDataSource{
     
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return createHeader(title: bagSections[section].rawValue)
     }
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return bagSections.count
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -106,7 +106,7 @@ extension BagViewCollectionViewCell: UITableViewDelegate, UITableViewDataSource{
 
 
 //MARK: Layout
-extension BagViewCollectionViewCell{
+extension BagViewBaseCell{
     
     private func setUpView(){
         addBagViewTableView()

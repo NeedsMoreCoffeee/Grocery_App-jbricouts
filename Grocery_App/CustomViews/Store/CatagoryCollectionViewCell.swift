@@ -20,7 +20,6 @@ class CatagoryCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addViews()
-        
         customCellContentView.alpha = 0
         animateFadeIn(delay: 0.5)
      

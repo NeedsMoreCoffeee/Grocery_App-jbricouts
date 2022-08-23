@@ -10,7 +10,7 @@ import UIKit
 
 // a blank cell used for testing purpouses
 class BlankCollectionViewCell: UICollectionViewCell {
-   static let reuseIdentifier = "reuseIdentifier"
+   static let reuseIdentifier = "BlankCollectionViewCellID"
     
    private let label = UILabel()
     

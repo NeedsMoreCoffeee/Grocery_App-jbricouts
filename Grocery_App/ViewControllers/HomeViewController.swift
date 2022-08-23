@@ -28,7 +28,15 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpView()
-     
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //scrollToSection(section: 2)
+    }
+    
+    private func scrollToSection(section: Int){
+        homeNavigationCollectionView.contentOffset.x = UIScreen.main.bounds.width * CGFloat(section)
+        
     }
     
   
@@ -62,14 +70,9 @@ extension HomeViewController:  UICollectionViewDelegate, UICollectionViewDataSou
         case .store:
              cell = collectionView.dequeueReusableCell(withReuseIdentifier: StoreViewBaseCell.reuseIdentifier, for: indexPath) as! StoreViewBaseCell
         case .bag:
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: BagViewCollectionViewCell.reuseIdentifier, for: indexPath) as! BagViewCollectionViewCell
-           // let cellRef = cell as! BagViewCollectionViewCell
-
-
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: BagViewBaseCell.reuseIdentifier, for: indexPath) as! BagViewBaseCell
         case .requests:
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: BlankCollectionViewCell.reuseIdentifier, for: indexPath) as! BlankCollectionViewCell
-            let cellRef = cell as! BlankCollectionViewCell
-            cellRef.setText(string: cellType.rawValue)
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: RequestsViewBaseCell.reuseIdentifier, for: indexPath) as! RequestsViewBaseCell
         case .menu:
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: BlankCollectionViewCell.reuseIdentifier, for: indexPath) as! BlankCollectionViewCell
             let cellRef = cell as! BlankCollectionViewCell
@@ -123,8 +126,8 @@ extension HomeViewController{
             homeNavigationCollectionView.bottomAnchor.constraint(equalTo: homeNavigationTabBar.topAnchor)
         ])
         homeNavigationCollectionView.register(StoreViewBaseCell.self, forCellWithReuseIdentifier: StoreViewBaseCell.reuseIdentifier)
-        homeNavigationCollectionView.register(BagViewCollectionViewCell.self, forCellWithReuseIdentifier: BagViewCollectionViewCell.reuseIdentifier)
-
+        homeNavigationCollectionView.register(BagViewBaseCell.self, forCellWithReuseIdentifier: BagViewBaseCell.reuseIdentifier)
+        homeNavigationCollectionView.register(RequestsViewBaseCell.self, forCellWithReuseIdentifier: RequestsViewBaseCell.reuseIdentifier)
         homeNavigationCollectionView.register(BlankCollectionViewCell.self, forCellWithReuseIdentifier: BlankCollectionViewCell.reuseIdentifier)
 
     }
