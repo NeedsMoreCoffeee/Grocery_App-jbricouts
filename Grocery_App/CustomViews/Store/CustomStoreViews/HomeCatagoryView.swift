@@ -9,7 +9,7 @@ import UIKit
 
 
 protocol CatagoryMenuDelegate{
-    func catagoryTapped(catagoryTapped catagory: String)
+    func catagoryTapped(catagoryTapped catagory: ProductsController.ProductCatagories)
 }
 // the initial 'store' page of our app
 class HomeCatagoryView: UIView {
@@ -26,6 +26,7 @@ class HomeCatagoryView: UIView {
         return cv
     }()
     
+    private var producstController: ProductsController?
     
     private let catagoryViewCellHeight: CGFloat = 144
     
@@ -36,15 +37,14 @@ class HomeCatagoryView: UIView {
 
     public var delegate: CatagoryMenuDelegate!
     
-    // an array of catagories that will be the foundation for our scroll view cells
-    private let catagories = ["New", "Produce", "Deli Meats", "Frozen", "Bakery", "Dairy", "Alcohol", "Supplies" ]
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
     }
 
-    
+    public func setProductsController(productsController: ProductsController){
+        self.producstController = productsController
+    }
 
     required init?(coder: NSCoder) {
         fatalError("Failied to implement coder")
@@ -65,12 +65,13 @@ extension HomeCatagoryView: UICollectionViewDelegate, UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return catagories.count
+        return (producstController?.getCatagories().count)!
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: catagoryCellId, for: indexPath) as! CatagoryCollectionViewCell
-        cell.setLabel(text: catagories[indexPath.row])
+        
+        cell.setCatagory(catagory: (producstController?.getCatagories()[indexPath.row])!)
         
         return cell
        
@@ -81,12 +82,12 @@ extension HomeCatagoryView: UICollectionViewDelegate, UICollectionViewDataSource
         delegate.catagoryTapped(catagoryTapped: cell.getCatagory())
     }
     
-  
-    
-    
-    
     
 }
+
+
+
+
 
 // MARK: Layout
 // adds layout, containing our catagories in a custom scroll bar,
@@ -122,108 +123,3 @@ extension HomeCatagoryView{
     
 }
 
-
-
-/*
- MARK: Old code: A custom scroll view with cells
- 
- // in an effort to minimize code I've decided against a UICollectionView since the functionality is simple
- // *1 - room for improvement: ive noticed the more catagories there are, the mor bottom spacing created.
- 
- // sets up the scroll view, which incapsulates our entire view
- let scrollView = UIScrollView()
- let amountOfCatagories:CGFloat = CGFloat(catagories.count)
- let advertisementHeight = 130.0
- let catagoryviewHeight = 144.0
- 
- // *1
- // (advertisement spacing + advertisementHeight) + (catagoriesHeight) + (catagories spacing)
- let catagoryViewHeight = (50.0 + advertisementHeight) + (catagoryviewHeight * amountOfCatagories / 2) + (25.0 * CGFloat(amountOfCatagories + 2))
- 
- // adds the scroll view which everything resides in
- scrollView.clipsToBounds = true
- scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: catagoryViewHeight)
- scrollView.backgroundColor = .clear
- addsView(scrollView)
- NSLayoutConstraint.activate([
-     scrollView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-     scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
-     scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-     scrollView.trailingAnchor.constraint(equalTo: trailingAnchor)
- ])
- 
-
- // a view with advertisements
- let advertisementView = UIView()
- advertisementView.backgroundColor = ProjectThemes.lightGreenSubTextColor
- advertisementView.layer.cornerRadius = 15
- scrollView.addsView(advertisementView)
- NSLayoutConstraint.activate([
-     advertisementView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 25),
-     advertisementView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25),
-     advertisementView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25),
-     advertisementView.heightAnchor.constraint(equalToConstant: advertisementHeight)
-     
- ])
- 
- // stylize the view by adding a shadow
- advertisementView.addThematicShadow()
- 
- 
-// createCatagoryViews(parent: scrollView, leadingAnchor: advertisementView, catagories: catagories) // example call
-
- Code used for an original custom scroll design, back when the functionality of this view was basic
- 
- 
- // creates the views of our catagories
- func createCatagoryViews(parent: UIView, leadingAnchor: UIView, catagories: [String]){
-     
-     // these keep track of which vertical heading to place our views
-     var leftLeadingTopAnchor = leadingAnchor.bottomAnchor
-     var rightLeadingTopAnchor = leadingAnchor.bottomAnchor
-
-     // devides our array in half, one for the left of the view one for the right
-     let split = catagories.count/2
-
-     
-     // iterate over all our catagories
-     for (index, _) in catagories.enumerated(){
-       
-         // determines if our catagory will be on the left or right
-         let isLeft = index < split
-                     
-         // sets our leading and trailing anchors
-         let start = isLeft ? leadingAnchor.leadingAnchor : leadingAnchor.centerXAnchor
-         let end = isLeft ? leadingAnchor.centerXAnchor : leadingAnchor.trailingAnchor
-         
-         // the spacing between out leading and trailing anchors
-         let constantEnd = isLeft ? -12.5 : 0.0
-         let constantStart = isLeft ? 0.0 : 12.5
-                 
-         // create and add the view
-         let catagoryView = UIView()
-         catagoryView.backgroundColor = .white
-         catagoryView.layer.cornerRadius = 16
-         catagoryView.tag = index
-         parent.addsView(catagoryView)
-         NSLayoutConstraint.activate([
-             catagoryView.topAnchor.constraint(equalTo: isLeft ? leftLeadingTopAnchor : rightLeadingTopAnchor, constant:  25),
-             catagoryView.leadingAnchor.constraint(equalTo: start, constant: constantStart),
-             catagoryView.trailingAnchor.constraint(equalTo: end, constant:  constantEnd),
-             catagoryView.heightAnchor.constraint(equalToConstant: 144)
-             
-         ])
-         
-         // stylize the view by adding a shadow
-         catagoryView.addThematicShadow()
-         
-         // update where our views top anchors are
-         if isLeft {leftLeadingTopAnchor = catagoryView.bottomAnchor}
-         if !isLeft {rightLeadingTopAnchor = catagoryView.bottomAnchor}
-         
-     }
-     
- }
- 
- 
- */

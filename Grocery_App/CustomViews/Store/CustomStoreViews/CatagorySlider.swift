@@ -15,7 +15,7 @@ protocol CatagorySliderDelegate{
 class CatagorySlider: UIView {
     
     
-    private let catagories: [String] = ["Fruits", "Veggies", "Nuts", "Berries"]
+    private let catagories: [String] = ["Error", "Error", "Error", "Error"]
     
     private var catagoryButtons: [UIButton]!
     
@@ -30,6 +30,13 @@ class CatagorySlider: UIView {
         
     }
     
+    public func setSliderTitles(titles: [String]){
+        for titleButton in catagoryButtons{
+            titleButton.removeFromSuperview()
+        }
+        indexPath = 0
+        createCatagoryButtons(titles: titles)
+    }
    
     
    @objc private func tappedCatagoryButton(sender: UIButton){
@@ -75,7 +82,7 @@ class CatagorySlider: UIView {
 extension CatagorySlider{
     
     private func setUpView(){
-        createCatagoryButtons()
+        createCatagoryButtons(titles: catagories)
         
         
     }
@@ -87,7 +94,7 @@ extension CatagorySlider{
         return scrollView
     }
     
-    private func createCatagoryButtons(){
+    private func createCatagoryButtons(titles: [String]){
         
         let scrollView = createScrollView()
         scrollView.backgroundColor = .clear
@@ -98,7 +105,7 @@ extension CatagorySlider{
 
         catagoryButtons = []
         
-        for (index, catagory) in catagories.enumerated(){
+        for (index, catagory) in titles.enumerated(){
             
             if trailingXInsert == nil{
                 trailingXInsert = scrollView.leadingAnchor

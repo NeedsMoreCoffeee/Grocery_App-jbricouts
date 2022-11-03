@@ -17,6 +17,8 @@ class ProductSearchCell: UICollectionViewCell {
     
     private var productTitleLabel:UILabel!
     
+
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpView()
@@ -26,8 +28,8 @@ class ProductSearchCell: UICollectionViewCell {
     
     
     
-    public func setCellProduct(name:String){
-        productTitleLabel.text = name
+    public func setCellProduct(product: ProductsController.Product){
+        productTitleLabel.text = product.name
     }
     
     required init?(coder: NSCoder) {

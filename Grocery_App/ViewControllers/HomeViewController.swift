@@ -24,6 +24,7 @@ class HomeViewController: UIViewController {
     // all of our menu options
     private let tabBarTypes: [TabBarType] = [.store, .bag, .requests, .menu]
 
+    private let productsController = ProductsController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,6 +70,10 @@ extension HomeViewController:  UICollectionViewDelegate, UICollectionViewDataSou
         switch cellType{
         case .store:
              cell = collectionView.dequeueReusableCell(withReuseIdentifier: StoreViewBaseCell.reuseIdentifier, for: indexPath) as! StoreViewBaseCell
+            
+            let storeCell = cell as! StoreViewBaseCell
+            storeCell.setProductsController(productsController: productsController)
+            
         case .bag:
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: BagViewBaseCell.reuseIdentifier, for: indexPath) as! BagViewBaseCell
         case .requests:

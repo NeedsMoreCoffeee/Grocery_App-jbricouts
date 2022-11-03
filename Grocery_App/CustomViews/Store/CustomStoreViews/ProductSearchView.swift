@@ -23,8 +23,9 @@ class ProductSearchView: UIView {
         return cv
     }()
     
+    private var productsController: ProductsController!
 
-    let product = ["Apple", "Mango", "Orange", "Banana", "Grapes", "Lemon", "Apple", "Mango", "Orange", "Banana", "Grapes", "Lemon"]
+    private var catagorySlider: CatagorySlider!
     
     private let productViewCellHeight: CGFloat = 176
     
@@ -34,12 +35,19 @@ class ProductSearchView: UIView {
 
     public var backButtonTap: (() -> Void)?
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    init(productsController: ProductsController){
+        super.init(frame: .zero)
+        self.productsController = productsController
         setUpView()
 
     }
     
+    public func setCatagorySearch(catagory: ProductsController.ProductCatagories){
+        catagoryTitle.text = catagory.rawValue
+        catagorySlider.setSliderTitles(titles: productsController.subCatagories[catagory]!)
+        
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -69,7 +77,7 @@ extension ProductSearchView:  UICollectionViewDelegate, UICollectionViewDataSour
     
   
     func catagoryTapped(withIndexPath indexPath: Int, withCatagoryName: String) {
-        catagoryTitle.text = withCatagoryName
+
     }
     
     
@@ -83,12 +91,12 @@ extension ProductSearchView:  UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return product.count
+        return productsController.getProducts().count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProductSearchCell.reuseIdentifier, for: indexPath) as! ProductSearchCell
-        cell.setCellProduct(name: product[indexPath.row])
+        cell.setCellProduct(product: productsController.getProducts()[indexPath.row])
         
         return cell
        
@@ -133,16 +141,16 @@ extension ProductSearchView{
     
     func createCatagorySlider() -> CatagorySlider{
         // add the header view to scene
-        let slider = CatagorySlider()
-        addsView(slider)
+        catagorySlider = CatagorySlider()
+        addsView(catagorySlider)
         NSLayoutConstraint.activate([
-            slider.topAnchor.constraint(equalTo: heaaderView.bottomAnchor),
-            slider.leadingAnchor.constraint(equalTo: leadingAnchor),
-            slider.trailingAnchor.constraint(equalTo: trailingAnchor),
-            slider.heightAnchor.constraint(equalToConstant: 53)
+            catagorySlider.topAnchor.constraint(equalTo: heaaderView.bottomAnchor),
+            catagorySlider.leadingAnchor.constraint(equalTo: leadingAnchor),
+            catagorySlider.trailingAnchor.constraint(equalTo: trailingAnchor),
+            catagorySlider.heightAnchor.constraint(equalToConstant: 53)
         ])
         
-        return slider
+        return catagorySlider
     }
     
     private func addCatagoryCollectionView(){

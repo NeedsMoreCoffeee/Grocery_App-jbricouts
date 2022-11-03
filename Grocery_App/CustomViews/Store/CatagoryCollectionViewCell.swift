@@ -12,8 +12,9 @@ class CatagoryCollectionViewCell: UICollectionViewCell {
     // the custom content view we use for our label
     private var customCellContentView: UIView!
     
-    private var catagoryName: String?
+    private var catagoryName: ProductsController.ProductCatagories!
   
+    private var catagoryImageView: UIImageView!
     
     var cellLabel: UILabel!
 
@@ -25,17 +26,14 @@ class CatagoryCollectionViewCell: UICollectionViewCell {
      
     }
     
-    public func getCatagory() -> String{
-        guard let name = catagoryName else{
-            return "Error Retrieving Catagory"
-        }
-        
-        return name
+    public func getCatagory() -> ProductsController.ProductCatagories{
+        return catagoryName
     }
     
-    public func setLabel(text: String){
-        cellLabel.text = text
-        catagoryName = text
+    public func setCatagory(catagory: ProductsController.ProductCatagories){
+        catagoryImageView.image = catagory.catagoryImage
+        cellLabel.text = catagory.rawValue
+        catagoryName = catagory
     }
     
     // fades our custom content view in to the view
@@ -78,16 +76,29 @@ extension CatagoryCollectionViewCell{
      }
      
      private func addLabel(){
+         
+         catagoryImageView = UIImageView()
+         catagoryImageView.contentMode = .scaleAspectFit
+         customCellContentView.addsView(catagoryImageView)
+         NSLayoutConstraint.activate([
+            catagoryImageView.centerXAnchor.constraint(equalTo: customCellContentView.centerXAnchor),
+            catagoryImageView.centerYAnchor.constraint(equalTo: customCellContentView.centerYAnchor, constant: -15),
+            catagoryImageView.widthAnchor.constraint(equalTo: customCellContentView.widthAnchor, multiplier: 0.7),
+            catagoryImageView.heightAnchor.constraint(equalTo: customCellContentView.widthAnchor, multiplier: 0.7),
+
+         ])
+         
+         
           cellLabel = UILabel()
          cellLabel.text = "Error"
-         cellLabel.font = UIFont(name: ProjectThemes.boldDMSans, size: 22)
+         cellLabel.font = UIFont(name: ProjectThemes.mediumDMSans, size: 13)
          cellLabel.textAlignment = .center
          cellLabel.textColor = .black
          cellLabel.sizeToFit()
          customCellContentView.addsView(cellLabel)
          NSLayoutConstraint.activate([
              cellLabel.centerXAnchor.constraint(equalTo: customCellContentView.centerXAnchor),
-             cellLabel.centerYAnchor.constraint(equalTo: customCellContentView.centerYAnchor)
+             cellLabel.topAnchor.constraint(equalTo: catagoryImageView.bottomAnchor, constant: 5)
 
          ])
          

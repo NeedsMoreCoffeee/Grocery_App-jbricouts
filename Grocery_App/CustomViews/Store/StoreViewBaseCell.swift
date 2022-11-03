@@ -18,18 +18,20 @@ class StoreViewBaseCell: UICollectionViewCell {
 
     static let reuseIdentifier = "storeBaseViewCellID"
     
+    private var producstController: ProductsController?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+    
+    public func setProductsController(productsController: ProductsController){
+        self.producstController = productsController
         setUpViews()
         addSearchView()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
     private func showProductSearchView(){
+        
         let isOpen = searchViewLeadingAnchor.constant < 0
         UIView.animate(withDuration: 0.2, animations: {
             self.searchView.alpha = isOpen ? 0 : 1.0
@@ -37,6 +39,16 @@ class StoreViewBaseCell: UICollectionViewCell {
             self.layoutIfNeeded()
         })
     }
+    
+    private func setSearchViewCatagory(catagory: ProductsController.ProductCatagories){
+        searchView.setCatagorySearch(catagory: catagory)
+
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
 
 
@@ -45,27 +57,15 @@ class StoreViewBaseCell: UICollectionViewCell {
 // MARK: Delegates
 extension StoreViewBaseCell: CatagoryMenuDelegate{
     
-    func catagoryTapped(catagoryTapped catagory: String) {
+    func catagoryTapped(catagoryTapped catagory: ProductsController.ProductCatagories) {
+        setSearchViewCatagory(catagory: catagory)
         showProductSearchView()
     }
     
-    func addSearchView(){
-        searchView = ProductSearchView()
-        searchView.backButtonTap = showProductSearchView
-        addsView(searchView)
-        NSLayoutConstraint.activate([
-            searchView.topAnchor.constraint(equalTo: topAnchor),
-            searchView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            searchView.widthAnchor.constraint(equalTo: widthAnchor)
-        
-        ])
-        
-        searchViewLeadingAnchor = searchView.leadingAnchor.constraint(equalTo: trailingAnchor)
-        searchViewLeadingAnchor.isActive = true
-    }
-    
-    
 }
+
+
+
 
 
 
@@ -100,6 +100,7 @@ extension StoreViewBaseCell{
     // the view which holds our content
     private func addContentView(){
         let catagoryScrollView = HomeCatagoryView()
+        catagoryScrollView.setProductsController(productsController: producstController!)
         catagoryScrollView.backgroundColor = .clear
         addsView(catagoryScrollView)
         NSLayoutConstraint.activate([
@@ -113,7 +114,20 @@ extension StoreViewBaseCell{
     }
     
   
-    
+   private func addSearchView(){
+       searchView = ProductSearchView(productsController: self.producstController!)
+        searchView.backButtonTap = showProductSearchView
+        addsView(searchView)
+        NSLayoutConstraint.activate([
+            searchView.topAnchor.constraint(equalTo: topAnchor),
+            searchView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            searchView.widthAnchor.constraint(equalTo: widthAnchor)
+        
+        ])
+        
+        searchViewLeadingAnchor = searchView.leadingAnchor.constraint(equalTo: trailingAnchor)
+        searchViewLeadingAnchor.isActive = true
+    }
 
     
 
